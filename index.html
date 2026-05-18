@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -89,6 +90,24 @@
     .link-btn-cal { border-color: rgba(120,200,170,0.4); color: #78C8AA; }
     .link-btn-cal:hover { background: rgba(120,200,170,0.1); color: #A8DCC8; }
   }
+
+  /* 確度バッジ */
+  .conf-badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 4px; font-weight: 400; letter-spacing: 0.02em; vertical-align: 1px; cursor: help; line-height: 1.4; }
+  .conf-confirmed { background: rgba(15,110,86,0.12); color: #0F6E56; }
+  .conf-likely { background: rgba(85,85,85,0.10); color: var(--text-secondary); }
+  .conf-estimated { background: rgba(180,120,40,0.12); color: #8a5a18; }
+  @media (prefers-color-scheme: dark) {
+    .conf-confirmed { background: rgba(120,200,170,0.18); color: #A8DCC8; }
+    .conf-likely { background: rgba(200,200,200,0.10); color: var(--text-secondary); }
+    .conf-estimated { background: rgba(220,160,90,0.18); color: #E5B878; }
+  }
+  /* step内では小さく目立たないように */
+  .step .conf-badge { font-size: 9px; padding: 0 4px; margin-left: 3px; }
+
+  /* 凡例 */
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 1rem; padding: 10px 12px; background: var(--surface-2); border-radius: var(--radius-md); font-size: 11px; color: var(--text-secondary); }
+  .legend-item { display: inline-flex; align-items: center; gap: 4px; }
+  .legend-title { font-weight: 500; color: var(--text-secondary); margin-right: 4px; }
   .empty { color: var(--text-tertiary); font-size: 13px; padding: 8px 4px; }
 
   .flow-card { padding: 14px; border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 12px; background: var(--surface); }
@@ -138,12 +157,21 @@
 
   <div class="filters" id="filters"></div>
 
+  <div class="legend" id="legend">
+    <span class="legend-title">情報の確度:</span>
+    <span class="legend-item"><span class="conf-badge conf-confirmed">確定</span>28卒公式が発表</span>
+    <span class="legend-item"><span class="conf-badge conf-likely">概ね確定</span>公式情報あり (日付幅広)</span>
+    <span class="legend-item"><span class="conf-badge conf-estimated">推測</span>過去年度からの推測</span>
+  </div>
+
   <div id="cal-view"></div>
   <div id="flow-view" style="display:none;"></div>
   <div id="src-view" style="display:none;"></div>
 
   <div class="footnote">
-    情報は2026年5月時点で公開されている28卒向け公式・主要就活サイトの発表をもとに整理しています。日程は予定で、各社マイページの最新情報が正です。エントリー前に必ず公式サイトでご確認ください。
+    <strong>情報の確度について</strong>：イベント名の横に「確定」「概ね確定」「推測」のバッジを付けています。「推測」とあるものは過去年度の傾向から推測した日程で、28卒の公式情報は未発表です。各社マイページの最新情報が正なので、エントリー前に必ず公式サイトでご確認ください。28卒公式日程が判明し次第、データを更新します。
+    <br><br>
+    情報は2026年5月時点で公開されている28卒向け公式・主要就活サイトの発表をもとに整理しています。
   </div>
 </div>
 
