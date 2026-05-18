@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>28卒サマーインターン カレンダー</title>
+<meta name="description" content="商社・デベロッパー・コンサル・金融の主要企業の2026年サマーインターン情報を月別カレンダー・企業別フローで一覧できます。" />
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --surface-2: #f3f1ec;
+    --text: #2c2c2a;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.22);
+    --bg-danger: #fcebeb;
+    --text-danger: #791f1f;
+    --bg-info: #e6f1fb;
+    --text-info: #0c447c;
+    --bg-warning: #faeeda;
+    --text-warning: #633806;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c;
+      --surface: #2a2a27;
+      --surface-2: #353532;
+      --text: #ebe9e0;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --border: rgba(255,255,255,0.12);
+      --border-strong: rgba(255,255,255,0.22);
+      --bg-danger: #501313;
+      --text-danger: #f7c1c1;
+      --bg-info: #042c53;
+      --text-info: #b5d4f4;
+      --bg-warning: #412402;
+      --text-warning: #fac775;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 80px; }
+  header { margin-bottom: 1.5rem; }
+  h1 { font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+  .subtitle { font-size: 13px; color: var(--text-secondary); margin: 0; }
+  .last-updated { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 0.5px solid var(--border); margin-bottom: 1.25rem; overflow-x: auto; }
+  .tab { padding: 10px 14px; font-size: 14px; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; white-space: nowrap; }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; align-items: center; }
+  .chip { padding: 5px 12px; font-size: 12px; border-radius: 999px; border: 0.5px solid var(--border); background: transparent; cursor: pointer; color: var(--text-secondary); font-family: inherit; }
+  .chip.active { background: var(--surface-2); color: var(--text); border-color: var(--border-strong); }
+  .chip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+
+  .month { margin-bottom: 1.5rem; }
+  .month-h { font-size: 16px; font-weight: 500; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: baseline; }
+  .month-h .sub { font-size: 12px; color: var(--text-tertiary); font-weight: 400; }
+  .events { display: flex; flex-direction: column; gap: 6px; }
+  .ev { display: grid; grid-template-columns: 64px 4px 1fr auto auto auto; gap: 10px; align-items: center; padding: 10px 12px; border-radius: var(--radius-md); background: var(--surface-2); font-size: 13px; }
+  .ev .date { color: var(--text-secondary); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .ev .bar { width: 3px; height: 24px; border-radius: 2px; }
+  .ev .body { display: flex; flex-direction: column; min-width: 0; }
+  .ev .name { font-weight: 500; font-size: 13px; }
+  .ev .type { font-size: 11px; color: var(--text-tertiary); line-height: 1.4; }
+  .ev .badge { font-size: 11px; padding: 2px 8px; white-space: nowrap; border-radius: 4px; }
+  .badge-dl { background: var(--bg-danger); color: var(--text-danger); }
+  .badge-ip { background: var(--bg-info); color: var(--text-info); }
+  .badge-sel { background: var(--bg-warning); color: var(--text-warning); }
+  .link-btn { font-size: 11px; padding: 4px 8px; border-radius: 4px; background: transparent; border: 0.5px solid var(--border); color: var(--text-secondary); cursor: pointer; white-space: nowrap; font-family: inherit; text-decoration: none; }
+  .link-btn:hover { background: var(--surface-2); color: var(--text); }
+  .link-btn-cal { border-color: rgba(15,110,86,0.4); color: #0F6E56; }
+  .link-btn-cal:hover { background: rgba(15,110,86,0.08); color: #0F6E56; }
+  .link-btn-disabled { opacity: 0.4; cursor: not-allowed; }
+  @media (prefers-color-scheme: dark) {
+    .link-btn-cal { border-color: rgba(120,200,170,0.4); color: #78C8AA; }
+    .link-btn-cal:hover { background: rgba(120,200,170,0.1); color: #A8DCC8; }
+  }
+  .empty { color: var(--text-tertiary); font-size: 13px; padding: 8px 4px; }
+
+  .flow-card { padding: 14px; border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 12px; background: var(--surface); }
+  .flow-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; gap: 12px; flex-wrap: wrap; }
+  .flow-name { font-size: 15px; font-weight: 500; }
+  .flow-name .ind-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+  .flow-tag { font-size: 11px; color: var(--text-secondary); padding: 2px 8px; border-radius: 4px; background: var(--surface-2); }
+  .flow-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+  .step { padding: 8px 10px; border-radius: var(--radius-md); background: var(--surface-2); font-size: 12px; min-width: 0; }
+  .step .step-label { font-size: 10px; letter-spacing: 0.04em; color: var(--text-tertiary); margin-bottom: 2px; }
+  .step .step-when { font-weight: 500; font-size: 12px; }
+  .step .step-detail { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .flow-links { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 0.5px solid var(--border); }
+
+  .src-section { margin-bottom: 1.25rem; }
+  .src-section h3 { font-size: 14px; font-weight: 500; margin: 0 0 8px; color: var(--text); }
+  .src-list { display: flex; flex-direction: column; gap: 6px; }
+  .src-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: var(--radius-md); background: var(--surface-2); font-size: 13px; gap: 10px; }
+  .src-label { color: var(--text); }
+  .src-note { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .src-body { min-width: 0; }
+  .footnote { font-size: 11px; color: var(--text-tertiary); margin-top: 2rem; line-height: 1.7; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+
+  @media (max-width: 600px) {
+    .flow-steps { grid-template-columns: repeat(2, 1fr); }
+    /* モバイルでは縦積みで、左端：日付＋カラーバー、右側：全コンテンツ */
+    .ev { grid-template-columns: 60px 3px 1fr; row-gap: 6px; }
+    .ev .badge { grid-column: 3; justify-self: end; }
+    .ev .link-btn,
+    .ev > span.link-btn { grid-column: 3; justify-self: end; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>28卒サマーインターン カレンダー</h1>
+    <p class="subtitle">商社・デベロッパー・コンサル・金融・広告・ベンチャー/ITの主要企業</p>
+    <p class="last-updated">最終更新: 2026年5月</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-cal" onclick="switchTab('cal')">月別カレンダー</button>
+    <button class="tab" id="tab-flow" onclick="switchTab('flow')">企業別フロー</button>
+    <button class="tab" id="tab-src" onclick="switchTab('src')">マイページ・情報源</button>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <div id="cal-view"></div>
+  <div id="flow-view" style="display:none;"></div>
+  <div id="src-view" style="display:none;"></div>
+
+  <div class="footnote">
+    情報は2026年5月時点で公開されている28卒向け公式・主要就活サイトの発表をもとに整理しています。日程は予定で、各社マイページの最新情報が正です。エントリー前に必ず公式サイトでご確認ください。
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
