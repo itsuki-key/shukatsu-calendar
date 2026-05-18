@@ -22,6 +22,20 @@ function esc(s) {
 }
 
 // ============================================================
+// 確度バッジ — 各イベントの情報源の確度を視覚化
+// ============================================================
+const CONFIDENCE_INFO = {
+  confirmed: { label: '確定', cls: 'conf-confirmed', tip: '28卒公式が確定発表している情報' },
+  likely:    { label: '概ね確定', cls: 'conf-likely',    tip: '28卒公式情報あり。ただし日付幅が広い、または「○月中旬」等の表記' },
+  estimated: { label: '推測', cls: 'conf-estimated', tip: '過去年度の傾向からの推測。28卒の公式情報は未発表' },
+};
+
+function confidenceBadge(conf) {
+  const c = CONFIDENCE_INFO[conf || 'estimated'];
+  return `<span class="conf-badge ${c.cls}" title="${esc(c.tip)}">${c.label}</span>`;
+}
+
+// ============================================================
 // Googleカレンダー連携 — イベントの date 文字列をパースして
 // Googleカレンダーの "予定を作成" URL を生成する
 // ============================================================
@@ -122,6 +136,7 @@ function switchTab(t) {
     document.getElementById(k+'-view').style.display = t === k ? '' : 'none';
   });
   document.getElementById('filters').style.display = t === 'src' ? 'none' : '';
+  document.getElementById('legend').style.display = t === 'src' ? 'none' : '';
   render();
 }
 
@@ -174,7 +189,7 @@ function renderCalendar() {
           <span class="date">${esc(e.date)}</span>
           <span class="bar" style="background:${c.color}"></span>
           <span class="body">
-            <span class="name">${esc(e.co)}</span>
+            <span class="name">${esc(e.co)} ${confidenceBadge(e.confidence)}</span>
             <span class="type">${esc(e.label)}</span>
           </span>
           <span class="badge ${KIND_CLASS[e.kind]}">${KIND_LABEL[e.kind]}</span>
@@ -208,7 +223,7 @@ function renderFlow() {
         <div class="flow-steps">`;
       for (const s of f.steps) {
         html += `<div class="step">
-          <div class="step-label">${esc(s.l)}</div>
+          <div class="step-label">${esc(s.l)} ${confidenceBadge(s.confidence)}</div>
           <div class="step-when">${esc(s.w)}</div>
           <div class="step-detail">${esc(s.d)}</div>
         </div>`;
